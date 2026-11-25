@@ -108,11 +108,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ll="ls -alh"
 alias python=python3
-if [[ "$(uname)" == "Darwin" ]]; then
-  alias esv=/Users/benjohnson/Projects/esv/bin/esv
-else
-  alias esv=/home/bjohnson/workspace/apps/esv/bin/esv
-fi
 
 
 # Prepend a directory to PATH only if it exists, so this file stays portable
@@ -133,7 +128,6 @@ export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 if [[ "$(uname)" == "Darwin" ]]; then
   export PATH="/opt/homebrew/bin:$PATH"
-  export PATH="/Users/benjohnson/Projects/esv/bin:$PATH"
 fi
 
 # >>> conda initialize >>>
@@ -179,23 +173,3 @@ fi
 
 # Added by Antigravity IDE
 _prepend_path "$HOME/.antigravity-ide/antigravity-ide/bin"
-
-# ─── Bitwarden credentials from macOS Keychain (no secrets in this file) ─
-# Provision once per machine (values never touch the repo). See SECRETS.md.
-#   Personal API key (for `bw login --apikey`):
-#     security add-generic-password -U -s bw-clientid     -a "$USER" -w '<client_id>'
-#     security add-generic-password -U -s bw-clientsecret -a "$USER" -w '<client_secret>'
-#   Optional master password (for fully unattended unlock):
-#     security add-generic-password -U -s bw-password     -a "$USER" -w '<master-password>'
-#   Secrets Manager (alternative, for `bws`):
-#     security add-generic-password -U -s bws-access-token -a "$USER" -w '<token>'
-#     security add-generic-password -U -s bws-project-id   -a "$USER" -w '<project-id>'
-if [[ "$(uname)" == "Darwin" ]] && command -v security >/dev/null 2>&1; then
-  _kc() { security find-generic-password -s "$1" -w 2>/dev/null; }
-  _v="$(_kc bw-clientid)";      [[ -n "$_v" ]] && export BW_CLIENTID="$_v"
-  _v="$(_kc bw-clientsecret)";  [[ -n "$_v" ]] && export BW_CLIENTSECRET="$_v"
-  _v="$(_kc bw-password)";      [[ -n "$_v" ]] && export BW_PASSWORD="$_v"
-  _v="$(_kc bws-access-token)"; [[ -n "$_v" ]] && export BWS_ACCESS_TOKEN="$_v"
-  _v="$(_kc bws-project-id)";   [[ -n "$_v" ]] && export HERMES_BWS_PROJECT_ID="$_v"
-  unset _v; unfunction _kc
-fi
